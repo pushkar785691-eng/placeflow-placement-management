@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/placeflow}
+    username: ${DB_USERNAME:placeflow}
+    password: ${DB_PASSWORD:placeflow}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  jackson:
+    default-property-inclusion: non_null
+server:
+  error:
+    include-message: never
+app:
+  jwt-secret: ${JWT_SECRET:local-development-secret-must-be-at-least-32-bytes}
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173}
