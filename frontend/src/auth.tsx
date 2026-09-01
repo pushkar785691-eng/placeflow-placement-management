@@ -1,0 +1,5 @@
+import {createContext,useContext,useState,type ReactNode} from 'react';import type{User}from'./types';import{api}from'./api';
+type Auth={user:User|null;login:(email:string,password:string)=>Promise<void>;register:(data:object)=>Promise<void>;logout:()=>void};
+const Context=createContext<Auth>(null!);
+export function AuthProvider({children}:{children:ReactNode}){const[user,setUser]=useState<User|null>(()=>{try{return JSON.parse(localStorage.getItem('user')||'null')}catch{return null}});async function submit(path:string,data:object){const result=await api<{token:string,user:User}>(path,{method:'POST',body:JSON.stringify(data)});localStorage.setItem('token',result.token);localStorage.setItem('user',JSON.stringify(result.user));setUser(result.user)}return <Context.Provider value={{user,login:(email,password)=>submit('/auth/login',{email,password}),register:data=>submit('/auth/register',data),logout:()=>{localStorage.clear();setUser(null)}}}>{children}</Context.Provider>}
+export const useAuth=()=>useContext(Context);
